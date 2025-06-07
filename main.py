@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import shap
 from sklearn import datasets
 from sklearn.cross_decomposition import PLSRegression
 from sklearn.model_selection import train_test_split
@@ -33,6 +34,17 @@ def visualize_predictions(y_test, y_pred):
     plt.show()
 
 
+def model_explanation(pls_model):
+    # Create a SHAP explainer for the PLS regression model using KernelExplainer
+    explainer = shap.KernelExplainer(pls_model.predict, X_train)
+
+    # Calculate SHAP values for the entire test set
+    shap_values = explainer.shap_values(X_test)
+
+    # Summary plot for all instances
+    shap.summary_plot(shap_values, X_test)
+
+
 def train_and_evaluate_pls_model(X_train, X_test, y_train, y_test):
     n_components = 3
     pls_model = PLSRegression(n_components=n_components)
@@ -44,6 +56,7 @@ def train_and_evaluate_pls_model(X_train, X_test, y_train, y_test):
     mse = mean_squared_error(y_test, y_pred)
     print(f"Mean Squared Error: {mse}")
     visualize_predictions(y_test, y_pred)
+    model_explanation(pls_model)
 
 
 if __name__ == "__main__":
