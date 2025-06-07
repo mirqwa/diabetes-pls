@@ -16,6 +16,23 @@ def get_data():
     return X_train, X_test, y_train, y_test
 
 
+def visualize_predictions(y_test, y_pred):
+    # Visualize predicted vs actual values with different colors
+    plt.scatter(y_test, y_pred, c="blue", label="Actual vs Predicted")
+    plt.plot(
+        [min(y_test), max(y_test)],
+        [min(y_test), max(y_test)],
+        "--",
+        c="red",
+        label="Perfect Prediction",
+    )
+    plt.xlabel("Actual Diabetes Progression")
+    plt.ylabel("Predicted Diabetes Progression")
+    plt.title("PLS Regression: Predicted vs Actual Diabetes Progression")
+    plt.legend()
+    plt.show()
+
+
 def train_and_evaluate_pls_model(X_train, X_test, y_train, y_test):
     n_components = 3
     pls_model = PLSRegression(n_components=n_components)
@@ -26,6 +43,7 @@ def train_and_evaluate_pls_model(X_train, X_test, y_train, y_test):
     print(f"R-Squared Error: {r_squared}")
     mse = mean_squared_error(y_test, y_pred)
     print(f"Mean Squared Error: {mse}")
+    visualize_predictions(y_test, y_pred)
 
 
 if __name__ == "__main__":
